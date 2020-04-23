@@ -28,6 +28,7 @@
 			<Button Command="{Binding RunCmd, Mode=TwoWay}" Margin="5,0">_Run IDEA StatiCa CCM</Button>
 			<Button Command="{Binding LoadCmd}" Margin="5,0">_Load model</Button>
             <Button Command="{Binding LoadCmd}" CommandParameter="default_project.xml" Margin="5,0">Default</Button>
+            <Button Command="{Binding GetConnectionModelCmd}" Margin="5,0">GetConnectionModel</Button>
 		</StackPanel>
 		<Grid>
             <Grid.RowDefinitions>

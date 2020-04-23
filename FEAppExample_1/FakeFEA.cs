@@ -1,4 +1,5 @@
 ﻿using IdeaStatiCa.Plugin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -9,6 +10,9 @@ namespace FEAppExample_1
 	{
 		private IHistoryLog log;
 		private ModelBIM feaModel;
+		public List<BIMItemId> SelectedItems { get; private set; }
+
+		public event EventHandler SelectionChanged;
 
 		public FakeFEA(IHistoryLog log, ModelBIM feaModel = null)
 		{
@@ -28,8 +32,16 @@ namespace FEAppExample_1
 			}
 
 			log.Add($"ActivateInFEA {items.Take(1).Select(i => $"{i.Type}: {i.Id}").FirstOrDefault()}");
+
+			SelectedItems = items;
+
 			Thread.Sleep(5000);
 			log.Add("ActivateInFEA finished");
+
+			if(SelectionChanged != null)
+			{
+				SelectionChanged.Invoke(this, new EventArgs() { });
+			}
 		}
 
 		protected override ModelBIM ImportActive(IdeaRS.OpenModel.CountryCode countryCode, RequestedItemsType requestedType)
