@@ -1,4 +1,5 @@
-﻿using IdeaRS.OpenModel.Connection;
+﻿using IdeaRS.OpenModel;
+using IdeaRS.OpenModel.Connection;
 using IdeaStatiCa.Plugin;
 using Microsoft.Win32;
 using Newtonsoft.Json;
@@ -22,15 +23,23 @@ namespace FEAppExample_1
 		private string workingDirectory;
 		private string projectName;
 		private string projectDir;
+		private IdeaRS.OpenModel.CountryCode countryCode;
 
 		public FEAppExample_1VM()
 		{
+			this.CountryCode = CountryCode.ECEN;
+
 			Actions = new ObservableCollection<string>();
 			IdeaStatiCaStatus = AppStatus.Finished;
 			RunCmd = new CustomCommand(this.CanRun, this.Run);
 			LoadCmd = new CustomCommand(this.CanLoad, this.Load);
 			GetConnectionModelCmd = new CustomCommand(this.CanGetConnectionModel, this.GetConnectionModel);
+			GetCssInProjectCmd = new CustomCommand(this.CanGetCssInProject, this.GetCssInProject);
+			GetCssInMprlCmd = new CustomCommand(this.CanGetCssInMprl, this.GetCssInMprl);
+			GetMatInProjectCmd = new CustomCommand(this.CanGetMatInProject, this.GetMatInProject);
+			GetMatInMprlCmd = new CustomCommand(this.CanGetMatInMprl, this.GetGetMatInMprl);
 			ProjectName = string.Empty;
+
 			WorkingDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Process.GetCurrentProcess().ProcessName);
 			if (!Directory.Exists(WorkingDirectory))
 			{
@@ -45,6 +54,11 @@ namespace FEAppExample_1
 		public CustomCommand LoadCmd { get; set; }
 		public CustomCommand RunCmd { get; set; }
 		public CustomCommand GetConnectionModelCmd { get; set; }
+		public CustomCommand GetCssInProjectCmd { get; set; }
+		public CustomCommand GetCssInMprlCmd { get; set; }
+		public CustomCommand GetMatInProjectCmd { get; set; }
+		public CustomCommand GetMatInMprlCmd { get; set; }
+
 		public string ModelFeaXml { get => modelFeaXml; set => modelFeaXml = value; }
 
 		private List<BIMItemId> selectedItems;
@@ -86,6 +100,16 @@ namespace FEAppExample_1
 			{
 				selectedItems = value;
 				NotifyPropertyChanged("SelectedItems");
+			}
+		}
+
+		public CountryCode CountryCode
+		{
+			get => countryCode;
+			set
+			{
+				countryCode = value;
+				NotifyPropertyChanged("CountryCode");
 			}
 		}
 
@@ -223,9 +247,198 @@ namespace FEAppExample_1
 						}
 						CommandManager.InvalidateRequerySuggested();
 					}));
+			}
+		}
 
+		private bool CanGetMatInMprl(object arg)
+		{
+			return FeaAppHosting?.Service != null;
+		}
 
+		private void GetGetMatInMprl(object obj)
+		{
+			if (FeaAppHosting == null)
+			{
+				return;
+			}
 
+			var bimAppliction = (ApplicationBIM)FeaAppHosting.Service;
+			if (bimAppliction == null)
+			{
+				Debug.Fail("Can not cast to ApplicationBIM");
+				return;
+			}
+
+			int myProcessId = bimAppliction.Id;
+			Add(string.Format("Starting commication with IdeaStatiCa running in  the process {0}", myProcessId));
+
+			using (IdeaStatiCaAppClient ideaStatiCaApp = new IdeaStatiCaAppClient(myProcessId.ToString()))
+			{
+				ideaStatiCaApp.Open();
+
+				var mprlMaterials = ideaStatiCaApp.GetMaterialsInMPRL(this.CountryCode);
+
+				System.Windows.Application.Current.Dispatcher.BeginInvoke(
+					System.Windows.Threading.DispatcherPriority.Normal,
+					(Action)(() =>
+					{
+						if (mprlMaterials == null)
+						{
+							Add("No data");
+						}
+						else
+						{
+							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
+							var jsonFormating = Formatting.Indented;
+							string geometryInJson = JsonConvert.SerializeObject(mprlMaterials, jsonFormating, jsonSetting);
+							Add(geometryInJson);
+						}
+						CommandManager.InvalidateRequerySuggested();
+					}));
+			}
+		}
+
+		private bool CanGetMatInProject(object arg)
+		{
+			return FeaAppHosting?.Service != null;
+		}
+
+		private void GetMatInProject(object obj)
+		{
+			if (FeaAppHosting == null)
+			{
+				return;
+			}
+
+			var bimAppliction = (ApplicationBIM)FeaAppHosting.Service;
+			if (bimAppliction == null)
+			{
+				Debug.Fail("Can not cast to ApplicationBIM");
+				return;
+			}
+
+			int myProcessId = bimAppliction.Id;
+			Add(string.Format("Starting commication with IdeaStatiCa running in  the process {0}", myProcessId));
+
+			using (IdeaStatiCaAppClient ideaStatiCaApp = new IdeaStatiCaAppClient(myProcessId.ToString()))
+			{
+				ideaStatiCaApp.Open();
+
+				var materialsInProject = ideaStatiCaApp.GetMaterialsInProject();
+
+				System.Windows.Application.Current.Dispatcher.BeginInvoke(
+					System.Windows.Threading.DispatcherPriority.Normal,
+					(Action)(() =>
+					{
+						if (materialsInProject == null)
+						{
+							Add("No data");
+						}
+						else
+						{
+							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
+							var jsonFormating = Formatting.Indented;
+							string geometryInJson = JsonConvert.SerializeObject(materialsInProject, jsonFormating, jsonSetting);
+							Add(geometryInJson);
+						}
+						CommandManager.InvalidateRequerySuggested();
+					}));
+			}
+		}
+
+		private bool CanGetCssInMprl(object arg)
+		{
+			return FeaAppHosting?.Service != null;
+		}
+
+		private void GetCssInMprl(object obj)
+		{
+			if (FeaAppHosting == null)
+			{
+				return;
+			}
+
+			var bimAppliction = (ApplicationBIM)FeaAppHosting.Service;
+			if (bimAppliction == null)
+			{
+				Debug.Fail("Can not cast to ApplicationBIM");
+				return;
+			}
+
+			int myProcessId = bimAppliction.Id;
+			Add(string.Format("Starting commication with IdeaStatiCa running in  the process {0}", myProcessId));
+
+			using (IdeaStatiCaAppClient ideaStatiCaApp = new IdeaStatiCaAppClient(myProcessId.ToString()))
+			{
+				ideaStatiCaApp.Open();
+
+				var cssInMprl = ideaStatiCaApp.GetCssInMPRL(this.CountryCode);
+
+				System.Windows.Application.Current.Dispatcher.BeginInvoke(
+					System.Windows.Threading.DispatcherPriority.Normal,
+					(Action)(() =>
+					{
+						if (cssInMprl == null)
+						{
+							Add("No data");
+						}
+						else
+						{
+							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
+							var jsonFormating = Formatting.Indented;
+							string geometryInJson = JsonConvert.SerializeObject(cssInMprl, jsonFormating, jsonSetting);
+							Add(geometryInJson);
+						}
+						CommandManager.InvalidateRequerySuggested();
+					}));
+			}
+		}
+
+		private bool CanGetCssInProject(object arg)
+		{
+			return FeaAppHosting?.Service != null;
+		}
+
+		private void GetCssInProject(object obj)
+		{
+			if (FeaAppHosting == null)
+			{
+				return;
+			}
+
+			var bimAppliction = (ApplicationBIM)FeaAppHosting.Service;
+			if (bimAppliction == null)
+			{
+				Debug.Fail("Can not cast to ApplicationBIM");
+				return;
+			}
+
+			int myProcessId = bimAppliction.Id;
+			Add(string.Format("Starting commication with IdeaStatiCa running in  the process {0}", myProcessId));
+
+			using (IdeaStatiCaAppClient ideaStatiCaApp = new IdeaStatiCaAppClient(myProcessId.ToString()))
+			{
+				ideaStatiCaApp.Open();
+
+				var cssInProject = ideaStatiCaApp.GetCssInProject();
+
+				System.Windows.Application.Current.Dispatcher.BeginInvoke(
+					System.Windows.Threading.DispatcherPriority.Normal,
+					(Action)(() =>
+					{
+						if (cssInProject == null)
+						{
+							Add("No data");
+						}
+						else
+						{
+							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
+							var jsonFormating = Formatting.Indented;
+							string geometryInJson = JsonConvert.SerializeObject(cssInProject, jsonFormating, jsonSetting);
+							Add(geometryInJson);
+						}
+						CommandManager.InvalidateRequerySuggested();
+					}));
 			}
 		}
 
