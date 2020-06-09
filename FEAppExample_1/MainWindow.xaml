@@ -7,30 +7,34 @@
 	xmlns:local="clr-namespace:FEAppExample_1"
 	mc:Ignorable="d"
 	Title="Some FE Application" Height="450" Width="800">
-	<Window.InputBindings>
-		<KeyBinding Command="{Binding RunCmd}" Key="F5" />
-	</Window.InputBindings>
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding RunCmd}" Key="F5" />
+    </Window.InputBindings>
 
-	<DockPanel LastChildFill="True">
-		<StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Background="LightGray" Height="22">
-			<StackPanel.Resources>
-				<Style TargetType="Button">
-					<Setter Property="Height" Value="20" />
-				</Style>
-				<Style TargetType="TextBlock">
-					<Setter Property="VerticalAlignment" Value="Center" />
-				</Style>
-				<Style TargetType="TextBox">
-					<Setter Property="VerticalAlignment" Value="Center" />
-					<Setter Property="Height" Value="20" />
-				</Style>
-			</StackPanel.Resources>
-			<Button Command="{Binding RunCmd, Mode=TwoWay}" Margin="5,0">_Run IDEA StatiCa CCM</Button>
-			<Button Command="{Binding LoadCmd}" Margin="5,0">_Load model</Button>
+    <DockPanel LastChildFill="True">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Background="LightGray" Height="22">
+            <StackPanel.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Height" Value="20" />
+                </Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+                <Style TargetType="TextBox">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="Height" Value="20" />
+                </Style>
+            </StackPanel.Resources>
+            <Button Command="{Binding RunCmd, Mode=TwoWay}" Margin="5,0">_Run IDEA StatiCa CCM</Button>
+            <Button Command="{Binding LoadCmd}" Margin="5,0">_Load model</Button>
             <Button Command="{Binding LoadCmd}" CommandParameter="default_project.xml" Margin="5,0">Default</Button>
             <Button Command="{Binding GetConnectionModelCmd}" Margin="5,0">GetConnectionModel</Button>
-		</StackPanel>
-		<Grid>
+            <Button Command="{Binding GetCssInProjectCmd}" Margin="5,0">CSS in project</Button>
+            <Button Command="{Binding GetCssInMprlCmd}" Margin="5,0">CSS in MPRL</Button>
+            <Button Command="{Binding GetMatInProjectCmd}" Margin="5,0">Materials in project</Button>
+            <Button Command="{Binding GetMatInMprlCmd}" Margin="5,0">Materials in MPRL</Button>
+        </StackPanel>
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="20"></RowDefinition>
                 <RowDefinition></RowDefinition>
@@ -39,7 +43,8 @@
                 <TextBlock Margin="5,0,10,0">Project location:</TextBlock>
                 <TextBox Text="{Binding ProjectDir}" MinWidth="75" />
             </StackPanel>
-            <ListView Grid.Row="1" x:Name="listView" ItemsSource="{Binding Actions}" />
-		</Grid>
-	</DockPanel>
+            <ListView Grid.Row="1" x:Name="listView"
+                      ItemsSource="{Binding Actions}"/>
+        </Grid>
+    </DockPanel>
 </Window>
