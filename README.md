@@ -24,3 +24,7 @@ In the file *FEAppExample_1.exe.config* should be the correct path
 
 When *Some FE Application* starts model should be created - it can be done creating default model - see the button **Default** or be opening model from xml - see the button **Load model**. IDEA CCM opens by clicking on the button **Run IDEA StatiCa CCM**.
 It is possible to get all materials and cross-sections in an open project as well as in IDEA StatiCa MPRL.
+
+In file [default_project.xml](https://github.com/idea-statica/ccm-examples/tree/master/\FEAppExample_1\default_project.xml) there is example how to import member into CCM.
+
+### ![Member in CCM](https://github.com/idea-statica/ccm-examples/blob/master/Images/member-project.png?raw=true)
