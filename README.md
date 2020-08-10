@@ -39,4 +39,4 @@ In the test application do following :
 * Import member by clicking in the button **Member**
 * In CCM configure the connections #2 and #3
 * Configure the memeber #2
-* Open the column #2 by clicking on the button **Open***
+* Open the column #2 by clicking on the button **Open**
