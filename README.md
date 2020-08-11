@@ -33,10 +33,10 @@ In the test application do following :
 * Set path to _IdeaCodeCheck.exe_
 * Build the project _FEAppExample_1.csproj_
 * Run _FEAppExample_1.exe_
-* Load model _member_project.xml_
+* Load IOM model from the file _member_project.xml_
 * Click on the button _Run IDEA StatiCa CCM_
 * Create a new project - data will be stored in the folder _C:\Users\YOUR-USER-NAME\Documents\FEAppExample_1\member_project\IdeaStatiCa-member_project_
-* Import member by clicking in the button **Member**
+* Import a member from IOM model to the CCM project by clicking on the button **Member**
 * In CCM configure the connections #2 and #3
 * Configure the memeber #2
-* Open the column #2 by clicking on the button **Open**
+* Open the column #2 in the application IDEA StatiCa Member by clicking on the button **Open**
