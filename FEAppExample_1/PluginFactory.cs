@@ -28,8 +28,7 @@ namespace FEAppExample_1
 		{
 			get
 			{
-				var dir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-				return Path.Combine(dir, Properties.Settings.Default.IdeaStatiCaDir);
+				return Properties.Settings.Default.IdeaStatiCaDir;
 			}
 		}
 	}
