@@ -148,15 +148,19 @@ namespace FEAppExample_1
 		{
 			ProjectName = Path.GetFileNameWithoutExtension(filePath);
 			ModelFeaXml = File.ReadAllText(filePath);
+			Add($"File '{filePath}' loaded.");
 
 			ProjectDir = Path.Combine(WorkingDirectory, ProjectName);
 			if(!Directory.Exists(ProjectDir))
 			{
 				Directory.CreateDirectory(ProjectDir);
 				File.Copy(filePath, Path.Combine(ProjectDir, Path.GetFileName(filePath)));
+				Add($"New project directory '{ProjectDir}' was created");
 			}
-
-			Add($"Model {filePath} loaded.");
+			else
+			{
+				Add($"Using existing project directory '{ProjectDir}'");
+			}
 		}
 
 		public void Run(object param)
