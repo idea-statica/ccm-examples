@@ -44,4 +44,7 @@ In the test application do following :
 
 All examples of ModelBIM can be found in folder [Examples](https://github.com/idea-statica/ccm-examples/blob/master/FEAppExample_1/Examples/)
 
-
+### FAQ related to [ModelBIM](https://github.com/idea-statica/ideastatica-plugin/blob/master/IdeaStatiCa.Plugin/ModelBIM.cs)
+* The list **Items** contains only nodes in which imported connections exist.
+* For each newly created **ConnectionPoint** the property **ProjectFileName** must be set - e.g. _<ProjectFileName>Connections\conn-1.ideaCon</ProjectFileName>_
+* Section **Messages** must be defined in ModelBIM (xml file) - there is a bug which causes crashes in CCM - it will be fixed in the next version
