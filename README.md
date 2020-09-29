@@ -42,7 +42,7 @@ In the test application do following :
 * Open the column #2 in the application IDEA StatiCa Member by clicking on the button **Open**
 
 
-All examples of FEA ModelBIM can be found in folder [FEA Examples](https://github.com/idea-statica/ccm-examples/blob/release-v20.1/FEAppExample_1/FEA_Model_Examples/)
+All examples of FEA ModelBIM Models can be found in folder [FEA Examples](https://github.com/idea-statica/ccm-examples/blob/release-v20.1/FEAppExample_1/FEA_Model_Examples/)
 
 ### FAQ related to [ModelBIM](https://github.com/idea-statica/ideastatica-plugin/blob/master/IdeaStatiCa.Plugin/ModelBIM.cs)
 * The list **Items** contains only nodes in which imported connections exist.
