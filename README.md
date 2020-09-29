@@ -44,7 +44,7 @@ In the test application do following :
 
 All examples of FEA ModelBIM Models can be found in folder [FEA Examples](https://github.com/idea-statica/ccm-examples/blob/release-v20.1/FEAppExample_1/FEA_Model_Examples/)
 
-### Improvemnts in IDEA StatiCa v 20.1
+### Improvements in IDEA StatiCa v 20.1
 
 BIM plugin can work as CAD application and provide data about a geometry of a connection. In the example you must check the check box **Is CAD** then some open model from [CAD ModelBIM examples](https://github.com/idea-statica/ccm-examples/tree/release-v20.1/FEAppExample_1/CAD_Model_Examples). For example [Column-On-BasePlate](https://github.com/idea-statica/ccm-examples/blob/release-v20.1/FEAppExample_1/CAD_Model_Examples/Column-On-BasePlate.xml)
 It enables to import a connection and its geometry to CCM.
