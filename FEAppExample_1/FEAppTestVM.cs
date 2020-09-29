@@ -141,6 +141,12 @@ namespace FEAppExample_1
 				? GetFilePath()
 				: Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), param.ToString());
 
+			if(string.IsNullOrEmpty(filePath))
+			{
+				// nothing to load;
+				return;
+			}
+
 			CreateProjectDirectory(filePath);
 		}
 
