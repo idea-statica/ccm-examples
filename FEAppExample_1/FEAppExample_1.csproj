@@ -99,7 +99,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Examples\default_project.xml">
+    <None Include="FEA_Model_Examples\default_project.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -112,12 +112,17 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Examples\member_project.xml">
+    <None Include="FEA_Model_Examples\member_project.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Examples\tube-conenction.xml">
+    <None Include="FEA_Model_Examples\tube-conenction.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CAD_Model_Examples\Column-On-BasePlate.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -19,7 +19,20 @@ namespace FEAppExample_1
 			this.log = log;
 		}
 
-		public ModelBIM FeaModel { get => feaModel; set => feaModel = value; }
+		public ModelBIM FeaModel
+		{
+			get => feaModel;
+			set => feaModel = value;
+		}
+
+		/// <summary>
+		/// Cad applications can provide the geometry of connections
+		/// </summary>
+		public bool IsCadApplication
+		{
+			get;
+			set;
+		}
 
 		protected override string ApplicationName => "My FEA";
 
@@ -42,6 +55,11 @@ namespace FEAppExample_1
 			{
 				SelectionChanged.Invoke(this, new EventArgs() { });
 			}
+		}
+
+		public override bool IsCAD()
+		{
+			return IsCadApplication;
 		}
 
 		protected override ModelBIM ImportActive(IdeaRS.OpenModel.CountryCode countryCode, RequestedItemsType requestedType)
