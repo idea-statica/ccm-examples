@@ -55,7 +55,7 @@ BIM plugin can work as CAD application and provide data about a geometry of a co
 
 ![Column-CHS-EndPlates](https://github.com/idea-statica/ccm-examples/blob/release-v20.1/Images/column-chs-endplates.png?raw=true)
 
-[ModelBIM for Column-CHS-EndPlates](https://github.com/idea-statica/ccm-examples/blob/release-v20.1/FEAppExample_1/CAD_Model_Examples/Column-CHS-EndPlates.xml.xml)
+[ModelBIM for Column-CHS-EndPlates](https://github.com/idea-statica/ccm-examples/blob/release-v20.1/FEAppExample_1/CAD_Model_Examples/Column-CHS-EndPlates.xml)
 
 ### FAQ related to [ModelBIM](https://github.com/idea-statica/ideastatica-plugin/blob/master/IdeaStatiCa.Plugin/ModelBIM.cs)
 * The list **Items** contains only nodes in which imported connections exist.
