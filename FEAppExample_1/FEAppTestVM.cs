@@ -24,6 +24,7 @@ namespace FEAppExample_1
 		private string projectName;
 		private string projectDir;
 		private IdeaRS.OpenModel.CountryCode countryCode;
+		private bool isCAD;
 
 		public FEAppExample_1VM()
 		{
@@ -45,6 +46,8 @@ namespace FEAppExample_1
 			{
 				Directory.CreateDirectory(WorkingDirectory);
 			}
+
+			isCAD = false;
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -70,6 +73,23 @@ namespace FEAppExample_1
 			{
 				workingDirectory = value;
 				NotifyPropertyChanged("WorkingDirectory");
+			}
+		}
+
+		public bool IsCAD
+		{
+			get => isCAD;
+			set
+			{
+				isCAD = value;
+
+				var fakeFea = ((FakeFEA)(FeaAppHosting?.Service));
+				if (fakeFea != null)
+				{
+					fakeFea.IsCadApplication = IsCAD;
+				}
+
+				NotifyPropertyChanged("IsCAD");
 			}
 		}
 
@@ -140,6 +160,12 @@ namespace FEAppExample_1
 			var filePath = param == null
 				? GetFilePath()
 				: Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), param.ToString());
+
+			if(string.IsNullOrEmpty(filePath))
+			{
+				// nothing to load;
+				return;
+			}
 
 			CreateProjectDirectory(filePath);
 		}
@@ -476,6 +502,7 @@ namespace FEAppExample_1
 
 				var model = Tools.ModelFromXml(ModelFeaXml);
 				var fakeFea = ((FakeFEA)(FeaAppHosting.Service));
+				fakeFea.IsCadApplication = IsCAD;
 				fakeFea.SelectionChanged += FakeFea_SelectionChanged;
 				((FakeFEA)(FeaAppHosting.Service)).FeaModel = model;
 			}

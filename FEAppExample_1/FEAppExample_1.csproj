@@ -99,25 +99,35 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Examples\default_project.xml">
+    <None Include="FEA_Model_Examples\default_project.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="IdeaStatiCa.Plugin">
-      <Version>20.0.15</Version>
+      <Version>20.1.4</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Examples\member_project.xml">
+    <None Include="FEA_Model_Examples\member_project.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Examples\tube-conenction.xml">
+    <None Include="FEA_Model_Examples\tube-conenction.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CAD_Model_Examples\Column-On-BasePlate.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CAD_Model_Examples\Column-CHS-EndPlates.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

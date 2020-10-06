@@ -42,7 +42,20 @@ In the test application do following :
 * Open the column #2 in the application IDEA StatiCa Member by clicking on the button **Open**
 
 
-All examples of ModelBIM can be found in folder [Examples](https://github.com/idea-statica/ccm-examples/blob/master/FEAppExample_1//Examples/)
+All examples of FEA ModelBIM Models can be found in folder [FEA Examples](https://github.com/idea-statica/ccm-examples/blob/release-v20.1/FEAppExample_1/FEA_Model_Examples/)
+
+### Improvements in IDEA StatiCa v 20.1
+
+BIM plugin can work as CAD application and provide data about a geometry of a connection. It enables to export connections from BIM applications together with their geometrical data. In the example FEAppExample_1
+ you must check the check box **Is CAD** then open a model from [CAD ModelBIM examples](https://github.com/idea-statica/ccm-examples/tree/release-v20.1/FEAppExample_1/CAD_Model_Examples).
+
+![Column-On-BasePlate](https://github.com/idea-statica/ccm-examples/blob/release-v20.1/Images/column-on-baseplate.png?raw=true)
+
+[ModelBIM for Column-On-BasePlate](https://github.com/idea-statica/ccm-examples/blob/release-v20.1/FEAppExample_1/CAD_Model_Examples/Column-On-BasePlate.xml)
+
+![Column-CHS-EndPlates](https://github.com/idea-statica/ccm-examples/blob/release-v20.1/Images/column-chs-endplates.png?raw=true)
+
+[ModelBIM for Column-CHS-EndPlates](https://github.com/idea-statica/ccm-examples/blob/release-v20.1/FEAppExample_1/CAD_Model_Examples/Column-CHS-EndPlates.xml)
 
 ### FAQ related to [ModelBIM](https://github.com/idea-statica/ideastatica-plugin/blob/master/IdeaStatiCa.Plugin/ModelBIM.cs)
 * The list **Items** contains only nodes in which imported connections exist.
