@@ -61,7 +61,7 @@ BIM plugin can work as CAD application and provide data about a geometry of a co
 
 ![Imported cleats to Idea ](https://github.com/idea-statica/ccm-examples/blob/release-v20.1/Images/cleats-ideacon.png?raw=true)
 
-[The original model created in AUTO Desk Advance Steel 2019](https://github.com/idea-statica/ccm-examples/blob/release-v20.1/Images/cleats_beam_to_column.dwg?raw=true)
+[The original model created in AUTO Desk Advance Steel 2019](https://github.com/idea-statica/ccm-examples/blob/release-v20.1/FEAppExample_1/CAD_Model_Examples/cleats_beam_to_column.dwg?raw=true)
 
 [ModelBIM for the cleat connection between the beam and the column](https://github.com/idea-statica/ccm-examples/blob/release-v20.1/FEAppExample_1/CAD_Model_Examples/cleats-beam-to-column.xml)
 
