@@ -320,8 +320,8 @@ namespace FEAppExample_1
 						{
 							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
 							var jsonFormating = Formatting.Indented;
-							string geometryInJson = JsonConvert.SerializeObject(mprlMaterials, jsonFormating, jsonSetting);
-							Add(geometryInJson);
+							string mprlMaterialsJson = JsonConvert.SerializeObject(mprlMaterials, jsonFormating, jsonSetting);
+							Add(mprlMaterialsJson);
 						}
 						CommandManager.InvalidateRequerySuggested();
 					}));
@@ -416,8 +416,8 @@ namespace FEAppExample_1
 						{
 							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
 							var jsonFormating = Formatting.Indented;
-							string geometryInJson = JsonConvert.SerializeObject(cssInMprl, jsonFormating, jsonSetting);
-							Add(geometryInJson);
+							string cssInMprlJson = JsonConvert.SerializeObject(cssInMprl, jsonFormating, jsonSetting);
+							Add(cssInMprlJson);
 						}
 						CommandManager.InvalidateRequerySuggested();
 					}));
