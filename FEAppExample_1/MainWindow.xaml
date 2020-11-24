@@ -42,7 +42,8 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Orientation="Horizontal">
                 <TextBlock Margin="5,0,10,0">Project location:</TextBlock>
-                <TextBox Text="{Binding ProjectDir}" MinWidth="75" />
+                <TextBox Text="{Binding ProjectDir}" MinWidth="75" Margin="5,0" />
+                <Button Command="{Binding ShowCCMLogCmd}" ToolTip="Logs available from IdeaStatiCa v20.1.2">Show CCM log</Button>
             </StackPanel>
             <ListView Grid.Row="1" x:Name="listView"
                       ItemsSource="{Binding Actions}"/>

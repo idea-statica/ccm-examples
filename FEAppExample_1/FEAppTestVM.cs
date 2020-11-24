@@ -39,6 +39,7 @@ namespace FEAppExample_1
 			GetCssInMprlCmd = new CustomCommand(this.CanGetCssInMprl, this.GetCssInMprl);
 			GetMatInProjectCmd = new CustomCommand(this.CanGetMatInProject, this.GetMatInProject);
 			GetMatInMprlCmd = new CustomCommand(this.CanGetMatInMprl, this.GetGetMatInMprl);
+			ShowCCMLogCmd = new CustomCommand(this.CanOpenCCMLogFile, this.OpenCCMLogFile);
 			ProjectName = string.Empty;
 
 			WorkingDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Process.GetCurrentProcess().ProcessName);
@@ -61,6 +62,7 @@ namespace FEAppExample_1
 		public CustomCommand GetCssInMprlCmd { get; set; }
 		public CustomCommand GetMatInProjectCmd { get; set; }
 		public CustomCommand GetMatInMprlCmd { get; set; }
+		public CustomCommand ShowCCMLogCmd { get; set; }
 
 		public string ModelFeaXml { get => modelFeaXml; set => modelFeaXml = value; }
 
@@ -470,6 +472,44 @@ namespace FEAppExample_1
 						CommandManager.InvalidateRequerySuggested();
 					}));
 			}
+		}
+
+		/// <summary>
+		/// Can CCM log file be opened 
+		/// </summary>
+		/// <param name="arg"></param>
+		/// <returns>Returs true if CCM log file exists</returns>
+		private bool CanOpenCCMLogFile(object arg)
+		{
+			return File.Exists(GetCCMLogFile());
+		}
+
+		/// <summary>
+		/// Open CCM log file if it exists in the temporary directory
+		/// </summary>
+		/// <param name="obj"></param>
+		private void OpenCCMLogFile(object obj)
+		{
+			string logFilePath = GetCCMLogFile();
+
+			if (File.Exists(logFilePath))
+			{
+				using (Process proc = new Process())
+				{
+					proc.StartInfo = new ProcessStartInfo(logFilePath);
+					proc.Start();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Returns the full file name of CCM log file
+		/// </summary>
+		/// <returns></returns>
+		private static string GetCCMLogFile()
+		{
+			var logFileFileName = Path.Combine(Path.GetTempPath(), "IdeaStatiCa\\Logs\\", "IdeaStatiCaCodeCheckManager.log");
+			return logFileFileName;
 		}
 
 		private static string GetFilePath()
