@@ -12,7 +12,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Windows.Input;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace FEAppExample_1
 {
@@ -35,6 +38,7 @@ namespace FEAppExample_1
 			RunCmd = new CustomCommand(this.CanRun, this.Run);
 			LoadCmd = new CustomCommand(this.CanLoad, this.Load);
 			GetConnectionModelCmd = new CustomCommand(this.CanGetConnectionModel, this.GetConnectionModel);
+			GetConnectionIOMModelCmd = new CustomCommand(this.CanGetConnectionIOMModel, this.GetConnectionIOMModel);
 			GetCssInProjectCmd = new CustomCommand(this.CanGetCssInProject, this.GetCssInProject);
 			GetCssInMprlCmd = new CustomCommand(this.CanGetCssInMprl, this.GetCssInMprl);
 			GetMatInProjectCmd = new CustomCommand(this.CanGetMatInProject, this.GetMatInProject);
@@ -58,6 +62,7 @@ namespace FEAppExample_1
 		public CustomCommand LoadCmd { get; set; }
 		public CustomCommand RunCmd { get; set; }
 		public CustomCommand GetConnectionModelCmd { get; set; }
+		public CustomCommand GetConnectionIOMModelCmd { get; set; }
 		public CustomCommand GetCssInProjectCmd { get; set; }
 		public CustomCommand GetCssInMprlCmd { get; set; }
 		public CustomCommand GetMatInProjectCmd { get; set; }
@@ -235,6 +240,27 @@ namespace FEAppExample_1
 			return true;
 		}
 
+		private bool CanGetConnectionIOMModel(object arg)
+		{
+			if (SelectedItems == null)
+			{
+				return false;
+			}
+
+			var firstItem = SelectedItems.FirstOrDefault();
+			if (firstItem == null)
+			{
+				return false;
+			}
+
+			if (firstItem.Type != BIMItemType.Node)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
 		private void GetConnectionModel(object obj)
 		{
 			var firstItem = SelectedItems.FirstOrDefault();
@@ -273,9 +299,65 @@ namespace FEAppExample_1
 						else
 						{
 							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
-							var jsonFormating = Formatting.Indented;
+							var jsonFormating = Newtonsoft.Json.Formatting.Indented;
 							string geometryInJson = JsonConvert.SerializeObject(connectionData, jsonFormating, jsonSetting);
 							Add(geometryInJson);
+						}
+						CommandManager.InvalidateRequerySuggested();
+					}));
+			}
+		}
+
+		private void GetConnectionIOMModel(object obj)
+		{
+			var firstItem = SelectedItems.FirstOrDefault();
+
+			if (FeaAppHosting == null)
+			{
+				return;
+			}
+
+			var bimAppliction = (ApplicationBIM)FeaAppHosting.Service;
+			if (bimAppliction == null)
+			{
+				Debug.Fail("Can not cast to ApplicationBIM");
+				return;
+			}
+
+			IdeaRS.OpenModel.OpenModelContainer connectionData = null;
+			int myProcessId = bimAppliction.Id;
+			Add(string.Format("Starting commication with IdeaStatiCa running in  the process {0}", myProcessId));
+
+			using (IdeaStatiCaAppClient ideaStatiCaApp = new IdeaStatiCaAppClient(myProcessId.ToString()))
+			{
+				ideaStatiCaApp.Open();
+				Add(string.Format("Getting connection IOM model for connection #{0}", firstItem.Id));
+				connectionData = ideaStatiCaApp.GetConnectionIOMModel(firstItem.Id);
+
+
+				System.Windows.Application.Current.Dispatcher.BeginInvoke(
+					System.Windows.Threading.DispatcherPriority.Normal,
+					(Action)(() =>
+					{
+						if (connectionData == null)
+						{
+							Add("No data");
+						}
+						else
+						{
+							XmlSerializer xs = new XmlSerializer(typeof(OpenModelContainer));
+							string res;
+							using (MemoryStream ms = new MemoryStream())
+							{
+								XmlTextWriter writer = new XmlTextWriter(ms, Encoding.Unicode);
+								// Serialize using the XmlTextWriter.
+								writer.Formatting = System.Xml.Formatting.Indented;
+								xs.Serialize(writer, connectionData);
+								writer.Flush();
+								ms.Position = 0;
+								res = Encoding.Unicode.GetString(ms.ToArray());
+							}
+							Add(res);
 						}
 						CommandManager.InvalidateRequerySuggested();
 					}));
@@ -321,7 +403,7 @@ namespace FEAppExample_1
 						else
 						{
 							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
-							var jsonFormating = Formatting.Indented;
+							var jsonFormating = Newtonsoft.Json.Formatting.Indented;
 							string mprlMaterialsJson = JsonConvert.SerializeObject(mprlMaterials, jsonFormating, jsonSetting);
 							Add(mprlMaterialsJson);
 						}
@@ -369,7 +451,7 @@ namespace FEAppExample_1
 						else
 						{
 							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
-							var jsonFormating = Formatting.Indented;
+							var jsonFormating = Newtonsoft.Json.Formatting.Indented;
 							string geometryInJson = JsonConvert.SerializeObject(materialsInProject, jsonFormating, jsonSetting);
 							Add(geometryInJson);
 						}
@@ -417,7 +499,7 @@ namespace FEAppExample_1
 						else
 						{
 							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
-							var jsonFormating = Formatting.Indented;
+							var jsonFormating = Newtonsoft.Json.Formatting.Indented;
 							string cssInMprlJson = JsonConvert.SerializeObject(cssInMprl, jsonFormating, jsonSetting);
 							Add(cssInMprlJson);
 						}
@@ -465,7 +547,7 @@ namespace FEAppExample_1
 						else
 						{
 							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
-							var jsonFormating = Formatting.Indented;
+							var jsonFormating = Newtonsoft.Json.Formatting.Indented;
 							string geometryInJson = JsonConvert.SerializeObject(cssInProject, jsonFormating, jsonSetting);
 							Add(geometryInJson);
 						}
