@@ -72,7 +72,7 @@ BIM plugin can work as CAD application and provide data about a geometry of a co
 [ModelBIM for the cleat connection between the beam and the column](https://github.com/idea-statica/ccm-examples/blob/release-v20.1/FEAppExample_1/CAD_Model_Examples/cleats-beam-to-column.xml)
 
 ### IDEA CCM diagnostics
-There are new diagnostics features in IdeaStatiCa which are available from version v20.1. 
+There are new diagnostics features in IdeaStatiCa which are available from version v 20.1.4367.1 (release on Dec 17, 2020)
 More details about configuration of the [diagnostics](Docs/ccm-diagnostics.md)
 ![CCM Diagnostics](Images/ccm-diagnostics.png)
 
