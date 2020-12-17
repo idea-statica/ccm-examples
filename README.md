@@ -71,6 +71,10 @@ BIM plugin can work as CAD application and provide data about a geometry of a co
 
 [ModelBIM for the cleat connection between the beam and the column](https://github.com/idea-statica/ccm-examples/blob/release-v20.1/FEAppExample_1/CAD_Model_Examples/cleats-beam-to-column.xml)
 
+### IDEA CCM diagnostics
+More details about configuration of the [diagnostics](Docs/ccm-diagnostics.md)
+![CCM Diagnostics](Images/ccm-diagnostics.png)
+
 ### FAQ related to [ModelBIM](https://github.com/idea-statica/ideastatica-plugin/blob/master/IdeaStatiCa.Plugin/ModelBIM.cs)
 * The list **Items** contains only nodes in which imported connections exist.
 * For each newly created **ConnectionPoint** the property **ProjectFileName** must be set - e.g. _<ProjectFileName>Connections\conn-1.ideaCon</ProjectFileName>_
