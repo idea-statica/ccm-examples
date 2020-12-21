@@ -30,7 +30,7 @@
             <Button Command="{Binding LoadCmd}" CommandParameter="FEA_Model_Examples\default_project.xml" Margin="5,0">Default</Button>
             <CheckBox Margin="5,3" IsChecked="{Binding IsCAD}">Is CAD</CheckBox>
             <Button Command="{Binding GetConnectionModelCmd}" Margin="5,0">GetConnectionModel</Button>
-			<Button Command="{Binding GetConnectionIOMModelCmd}" Margin="5,0">GetConnectionIOMModel</Button>
+            <Button Command="{Binding GetAllConnectionDataCmd}" Margin="5,0">GetAllConnectionData</Button>
             <Button Command="{Binding GetCssInProjectCmd}" Margin="5,0">CSS in project</Button>
             <Button Command="{Binding GetCssInMprlCmd}" Margin="5,0">CSS in MPRL</Button>
             <Button Command="{Binding GetMatInProjectCmd}" Margin="5,0">Materials in project</Button>

@@ -38,7 +38,7 @@ namespace FEAppExample_1
 			RunCmd = new CustomCommand(this.CanRun, this.Run);
 			LoadCmd = new CustomCommand(this.CanLoad, this.Load);
 			GetConnectionModelCmd = new CustomCommand(this.CanGetConnectionModel, this.GetConnectionModel);
-			GetConnectionIOMModelCmd = new CustomCommand(this.CanGetConnectionIOMModel, this.GetConnectionIOMModel);
+			GetAllConnectionDataCmd = new CustomCommand(this.CanGetAllConnectionData, this.GetAllConnectionData);
 			GetCssInProjectCmd = new CustomCommand(this.CanGetCssInProject, this.GetCssInProject);
 			GetCssInMprlCmd = new CustomCommand(this.CanGetCssInMprl, this.GetCssInMprl);
 			GetMatInProjectCmd = new CustomCommand(this.CanGetMatInProject, this.GetMatInProject);
@@ -62,7 +62,7 @@ namespace FEAppExample_1
 		public CustomCommand LoadCmd { get; set; }
 		public CustomCommand RunCmd { get; set; }
 		public CustomCommand GetConnectionModelCmd { get; set; }
-		public CustomCommand GetConnectionIOMModelCmd { get; set; }
+		public CustomCommand GetAllConnectionDataCmd { get; set; }
 		public CustomCommand GetCssInProjectCmd { get; set; }
 		public CustomCommand GetCssInMprlCmd { get; set; }
 		public CustomCommand GetMatInProjectCmd { get; set; }
@@ -240,7 +240,7 @@ namespace FEAppExample_1
 			return true;
 		}
 
-		private bool CanGetConnectionIOMModel(object arg)
+		private bool CanGetAllConnectionData(object arg)
 		{
 			if (SelectedItems == null)
 			{
@@ -308,7 +308,7 @@ namespace FEAppExample_1
 			}
 		}
 
-		private void GetConnectionIOMModel(object obj)
+		private void GetAllConnectionData(object obj)
 		{
 			var firstItem = SelectedItems.FirstOrDefault();
 
@@ -324,7 +324,7 @@ namespace FEAppExample_1
 				return;
 			}
 
-			IdeaRS.OpenModel.OpenModelContainer connectionData = null;
+			IdeaRS.OpenModel.OpenModelTuple connectionData = null;
 			int myProcessId = bimAppliction.Id;
 			Add(string.Format("Starting commication with IdeaStatiCa running in  the process {0}", myProcessId));
 
@@ -332,8 +332,7 @@ namespace FEAppExample_1
 			{
 				ideaStatiCaApp.Open();
 				Add(string.Format("Getting connection IOM model for connection #{0}", firstItem.Id));
-				connectionData = ideaStatiCaApp.GetConnectionIOMModel(firstItem.Id);
-
+				connectionData = ideaStatiCaApp.GetAllConnectionData(firstItem.Id);
 
 				System.Windows.Application.Current.Dispatcher.BeginInvoke(
 					System.Windows.Threading.DispatcherPriority.Normal,
@@ -345,7 +344,7 @@ namespace FEAppExample_1
 						}
 						else
 						{
-							XmlSerializer xs = new XmlSerializer(typeof(OpenModelContainer));
+							XmlSerializer xs = new XmlSerializer(typeof(IdeaRS.OpenModel.OpenModelTuple));
 							string res;
 							using (MemoryStream ms = new MemoryStream())
 							{
