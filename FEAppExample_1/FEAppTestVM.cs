@@ -12,7 +12,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Windows.Input;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace FEAppExample_1
 {
@@ -25,6 +28,7 @@ namespace FEAppExample_1
 		private string projectDir;
 		private IdeaRS.OpenModel.CountryCode countryCode;
 		private bool isCAD;
+		private string detailInformation;
 
 		public FEAppExample_1VM()
 		{
@@ -35,6 +39,7 @@ namespace FEAppExample_1
 			RunCmd = new CustomCommand(this.CanRun, this.Run);
 			LoadCmd = new CustomCommand(this.CanLoad, this.Load);
 			GetConnectionModelCmd = new CustomCommand(this.CanGetConnectionModel, this.GetConnectionModel);
+			GetAllConnectionDataCmd = new CustomCommand(this.CanGetAllConnectionData, this.GetAllConnectionData);
 			GetCssInProjectCmd = new CustomCommand(this.CanGetCssInProject, this.GetCssInProject);
 			GetCssInMprlCmd = new CustomCommand(this.CanGetCssInMprl, this.GetCssInMprl);
 			GetMatInProjectCmd = new CustomCommand(this.CanGetMatInProject, this.GetMatInProject);
@@ -58,6 +63,7 @@ namespace FEAppExample_1
 		public CustomCommand LoadCmd { get; set; }
 		public CustomCommand RunCmd { get; set; }
 		public CustomCommand GetConnectionModelCmd { get; set; }
+		public CustomCommand GetAllConnectionDataCmd { get; set; }
 		public CustomCommand GetCssInProjectCmd { get; set; }
 		public CustomCommand GetCssInMprlCmd { get; set; }
 		public CustomCommand GetMatInProjectCmd { get; set; }
@@ -137,6 +143,16 @@ namespace FEAppExample_1
 
 		public IBIMPluginHosting FeaAppHosting { get => feaAppHosting; set => feaAppHosting = value; }
 
+		public string DetailInformation
+		{
+			get => detailInformation;
+			set
+			{
+				detailInformation = value;
+				NotifyPropertyChanged("DetailInformation");
+			}
+		}
+
 		public void Add(string action)
 		{
 			System.Windows.Application.Current.Dispatcher.BeginInvoke(
@@ -144,6 +160,16 @@ namespace FEAppExample_1
 				(Action)(() =>
 				{
 					Actions.Add(action);
+				}));
+		}
+
+		public void SetDetailInformation(string detailInfo)
+		{
+			System.Windows.Application.Current.Dispatcher.BeginInvoke(
+				System.Windows.Threading.DispatcherPriority.Normal,
+				(Action)(() =>
+				{
+					DetailInformation = detailInfo;
 				}));
 		}
 
@@ -235,6 +261,27 @@ namespace FEAppExample_1
 			return true;
 		}
 
+		private bool CanGetAllConnectionData(object arg)
+		{
+			if (SelectedItems == null)
+			{
+				return false;
+			}
+
+			var firstItem = SelectedItems.FirstOrDefault();
+			if (firstItem == null)
+			{
+				return false;
+			}
+
+			if (firstItem.Type != BIMItemType.Node)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
 		private void GetConnectionModel(object obj)
 		{
 			var firstItem = SelectedItems.FirstOrDefault();
@@ -273,9 +320,59 @@ namespace FEAppExample_1
 						else
 						{
 							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
-							var jsonFormating = Formatting.Indented;
+							var jsonFormating = Newtonsoft.Json.Formatting.Indented;
 							string geometryInJson = JsonConvert.SerializeObject(connectionData, jsonFormating, jsonSetting);
-							Add(geometryInJson);
+
+							Add("GetConnectionModel succeeded");
+							SetDetailInformation(geometryInJson);
+						}
+						CommandManager.InvalidateRequerySuggested();
+					}));
+			}
+		}
+
+		private void GetAllConnectionData(object obj)
+		{
+			var firstItem = SelectedItems.FirstOrDefault();
+
+			if (FeaAppHosting == null)
+			{
+				return;
+			}
+
+			var bimAppliction = (ApplicationBIM)FeaAppHosting.Service;
+			if (bimAppliction == null)
+			{
+				Debug.Fail("Can not cast to ApplicationBIM");
+				return;
+			}
+
+			int myProcessId = bimAppliction.Id;
+			Add(string.Format("Starting commication with IdeaStatiCa running in  the process {0}", myProcessId));
+
+			OpenModelTuple openModelTuple = null;
+
+			using (IdeaStatiCaAppClient ideaStatiCaApp = new IdeaStatiCaAppClient(myProcessId.ToString()))
+			{
+				ideaStatiCaApp.Open();
+				Add(string.Format("Getting connection IOM model for connection #{0}", firstItem.Id));
+				string openModelTupleXml = ideaStatiCaApp.GetAllConnectionData(firstItem.Id);
+
+				System.Windows.Application.Current.Dispatcher.BeginInvoke(
+					System.Windows.Threading.DispatcherPriority.Normal,
+					(Action)(() =>
+					{
+						if (string.IsNullOrEmpty(openModelTupleXml) || openModelTupleXml.StartsWith("Error", StringComparison.InvariantCultureIgnoreCase))
+						{
+							Add("Error - see details in the CCM logfile");
+						}
+						else
+						{
+							// get an instance of OpenModelTuple from XML
+							openModelTuple = Tools.OpenModelTupleFromXml(openModelTupleXml);
+
+							Add("GetAllConnectionData succeeded");
+							SetDetailInformation(openModelTupleXml);
 						}
 						CommandManager.InvalidateRequerySuggested();
 					}));
@@ -321,9 +418,10 @@ namespace FEAppExample_1
 						else
 						{
 							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
-							var jsonFormating = Formatting.Indented;
+							var jsonFormating = Newtonsoft.Json.Formatting.Indented;
 							string mprlMaterialsJson = JsonConvert.SerializeObject(mprlMaterials, jsonFormating, jsonSetting);
-							Add(mprlMaterialsJson);
+							Add("GetGetMatInMprl succeeded");
+							SetDetailInformation(mprlMaterialsJson);
 						}
 						CommandManager.InvalidateRequerySuggested();
 					}));
@@ -369,9 +467,11 @@ namespace FEAppExample_1
 						else
 						{
 							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
-							var jsonFormating = Formatting.Indented;
-							string geometryInJson = JsonConvert.SerializeObject(materialsInProject, jsonFormating, jsonSetting);
-							Add(geometryInJson);
+							var jsonFormating = Newtonsoft.Json.Formatting.Indented;
+							string materialsJson = JsonConvert.SerializeObject(materialsInProject, jsonFormating, jsonSetting);
+
+							Add("GetMatInProject succeeded");
+							SetDetailInformation(materialsJson);
 						}
 						CommandManager.InvalidateRequerySuggested();
 					}));
@@ -412,14 +512,16 @@ namespace FEAppExample_1
 					{
 						if (cssInMprl == null)
 						{
-							Add("No data");
+							Add("GetCssInMprl - No data");
 						}
 						else
 						{
 							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
-							var jsonFormating = Formatting.Indented;
+							var jsonFormating = Newtonsoft.Json.Formatting.Indented;
 							string cssInMprlJson = JsonConvert.SerializeObject(cssInMprl, jsonFormating, jsonSetting);
-							Add(cssInMprlJson);
+
+							Add("GetCssInMprl succeeded");
+							SetDetailInformation(cssInMprlJson);
 						}
 						CommandManager.InvalidateRequerySuggested();
 					}));
@@ -460,14 +562,17 @@ namespace FEAppExample_1
 					{
 						if (cssInProject == null)
 						{
-							Add("No data");
+							Add("GetCssInProject - No data");
 						}
 						else
 						{
 							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
-							var jsonFormating = Formatting.Indented;
-							string geometryInJson = JsonConvert.SerializeObject(cssInProject, jsonFormating, jsonSetting);
-							Add(geometryInJson);
+							var jsonFormating = Newtonsoft.Json.Formatting.Indented;
+							string cssInProjectJson = JsonConvert.SerializeObject(cssInProject, jsonFormating, jsonSetting);
+
+							Add("GetCssInProject succeeded");
+							SetDetailInformation(cssInProjectJson);
+
 						}
 						CommandManager.InvalidateRequerySuggested();
 					}));
