@@ -324,39 +324,30 @@ namespace FEAppExample_1
 				return;
 			}
 
-			IdeaRS.OpenModel.OpenModelTuple connectionData = null;
 			int myProcessId = bimAppliction.Id;
 			Add(string.Format("Starting commication with IdeaStatiCa running in  the process {0}", myProcessId));
+
+			OpenModelTuple openModelTuple = null;
 
 			using (IdeaStatiCaAppClient ideaStatiCaApp = new IdeaStatiCaAppClient(myProcessId.ToString()))
 			{
 				ideaStatiCaApp.Open();
 				Add(string.Format("Getting connection IOM model for connection #{0}", firstItem.Id));
-				connectionData = ideaStatiCaApp.GetAllConnectionData(firstItem.Id);
+				string openModelTupleXml = ideaStatiCaApp.GetAllConnectionData(firstItem.Id);
 
 				System.Windows.Application.Current.Dispatcher.BeginInvoke(
 					System.Windows.Threading.DispatcherPriority.Normal,
 					(Action)(() =>
 					{
-						if (connectionData == null)
+						if (string.IsNullOrEmpty(openModelTupleXml) || openModelTupleXml.StartsWith("Error", StringComparison.InvariantCultureIgnoreCase))
 						{
-							Add("No data");
+							Add("Error - see details in the CCM logfile");
 						}
 						else
 						{
-							XmlSerializer xs = new XmlSerializer(typeof(IdeaRS.OpenModel.OpenModelTuple));
-							string res;
-							using (MemoryStream ms = new MemoryStream())
-							{
-								XmlTextWriter writer = new XmlTextWriter(ms, Encoding.Unicode);
-								// Serialize using the XmlTextWriter.
-								writer.Formatting = System.Xml.Formatting.Indented;
-								xs.Serialize(writer, connectionData);
-								writer.Flush();
-								ms.Position = 0;
-								res = Encoding.Unicode.GetString(ms.ToArray());
-							}
-							Add(res);
+							// get an instance of OpenModelTuple from XML
+							openModelTuple = Tools.OpenModelTupleFromXml(openModelTupleXml);
+							Add(openModelTupleXml);
 						}
 						CommandManager.InvalidateRequerySuggested();
 					}));
