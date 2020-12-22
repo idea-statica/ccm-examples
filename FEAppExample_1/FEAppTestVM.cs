@@ -28,6 +28,7 @@ namespace FEAppExample_1
 		private string projectDir;
 		private IdeaRS.OpenModel.CountryCode countryCode;
 		private bool isCAD;
+		private string detailInformation;
 
 		public FEAppExample_1VM()
 		{
@@ -142,6 +143,16 @@ namespace FEAppExample_1
 
 		public IBIMPluginHosting FeaAppHosting { get => feaAppHosting; set => feaAppHosting = value; }
 
+		public string DetailInformation
+		{
+			get => detailInformation;
+			set
+			{
+				detailInformation = value;
+				NotifyPropertyChanged("DetailInformation");
+			}
+		}
+
 		public void Add(string action)
 		{
 			System.Windows.Application.Current.Dispatcher.BeginInvoke(
@@ -149,6 +160,16 @@ namespace FEAppExample_1
 				(Action)(() =>
 				{
 					Actions.Add(action);
+				}));
+		}
+
+		public void SetDetailInformation(string detailInfo)
+		{
+			System.Windows.Application.Current.Dispatcher.BeginInvoke(
+				System.Windows.Threading.DispatcherPriority.Normal,
+				(Action)(() =>
+				{
+					DetailInformation = detailInfo;
 				}));
 		}
 
@@ -301,7 +322,9 @@ namespace FEAppExample_1
 							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
 							var jsonFormating = Newtonsoft.Json.Formatting.Indented;
 							string geometryInJson = JsonConvert.SerializeObject(connectionData, jsonFormating, jsonSetting);
-							Add(geometryInJson);
+
+							Add("GetConnectionModel succeeded");
+							SetDetailInformation(geometryInJson);
 						}
 						CommandManager.InvalidateRequerySuggested();
 					}));
@@ -347,7 +370,9 @@ namespace FEAppExample_1
 						{
 							// get an instance of OpenModelTuple from XML
 							openModelTuple = Tools.OpenModelTupleFromXml(openModelTupleXml);
-							Add(openModelTupleXml);
+
+							Add("GetAllConnectionData succeeded");
+							SetDetailInformation(openModelTupleXml);
 						}
 						CommandManager.InvalidateRequerySuggested();
 					}));
@@ -395,7 +420,8 @@ namespace FEAppExample_1
 							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
 							var jsonFormating = Newtonsoft.Json.Formatting.Indented;
 							string mprlMaterialsJson = JsonConvert.SerializeObject(mprlMaterials, jsonFormating, jsonSetting);
-							Add(mprlMaterialsJson);
+							Add("GetGetMatInMprl succeeded");
+							SetDetailInformation(mprlMaterialsJson);
 						}
 						CommandManager.InvalidateRequerySuggested();
 					}));
@@ -442,8 +468,10 @@ namespace FEAppExample_1
 						{
 							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
 							var jsonFormating = Newtonsoft.Json.Formatting.Indented;
-							string geometryInJson = JsonConvert.SerializeObject(materialsInProject, jsonFormating, jsonSetting);
-							Add(geometryInJson);
+							string materialsJson = JsonConvert.SerializeObject(materialsInProject, jsonFormating, jsonSetting);
+
+							Add("GetMatInProject succeeded");
+							SetDetailInformation(materialsJson);
 						}
 						CommandManager.InvalidateRequerySuggested();
 					}));
@@ -484,14 +512,16 @@ namespace FEAppExample_1
 					{
 						if (cssInMprl == null)
 						{
-							Add("No data");
+							Add("GetCssInMprl - No data");
 						}
 						else
 						{
 							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
 							var jsonFormating = Newtonsoft.Json.Formatting.Indented;
 							string cssInMprlJson = JsonConvert.SerializeObject(cssInMprl, jsonFormating, jsonSetting);
-							Add(cssInMprlJson);
+
+							Add("GetCssInMprl succeeded");
+							SetDetailInformation(cssInMprlJson);
 						}
 						CommandManager.InvalidateRequerySuggested();
 					}));
@@ -532,14 +562,17 @@ namespace FEAppExample_1
 					{
 						if (cssInProject == null)
 						{
-							Add("No data");
+							Add("GetCssInProject - No data");
 						}
 						else
 						{
 							var jsonSetting = new JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(), Culture = CultureInfo.InvariantCulture };
 							var jsonFormating = Newtonsoft.Json.Formatting.Indented;
-							string geometryInJson = JsonConvert.SerializeObject(cssInProject, jsonFormating, jsonSetting);
-							Add(geometryInJson);
+							string cssInProjectJson = JsonConvert.SerializeObject(cssInProject, jsonFormating, jsonSetting);
+
+							Add("GetCssInProject succeeded");
+							SetDetailInformation(cssInProjectJson);
+
 						}
 						CommandManager.InvalidateRequerySuggested();
 					}));
