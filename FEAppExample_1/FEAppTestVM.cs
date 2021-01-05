@@ -350,7 +350,7 @@ namespace FEAppExample_1
 			int myProcessId = bimAppliction.Id;
 			Add(string.Format("Starting commication with IdeaStatiCa running in  the process {0}", myProcessId));
 
-			OpenModelTuple openModelTuple = null;
+			OpenModelContainer openModelTuple = null;
 
 			using (IdeaStatiCaAppClient ideaStatiCaApp = new IdeaStatiCaAppClient(myProcessId.ToString()))
 			{
@@ -368,7 +368,7 @@ namespace FEAppExample_1
 						}
 						else
 						{
-							// get an instance of OpenModelTuple from XML
+							// get an instance of OpenModelContainer from XML
 							openModelTuple = Tools.OpenModelTupleFromXml(openModelTupleXml);
 
 							Add("GetAllConnectionData succeeded");
