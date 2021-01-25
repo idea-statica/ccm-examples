@@ -369,7 +369,7 @@ namespace FEAppExample_1
 						else
 						{
 							// get an instance of OpenModelContainer from XML
-							openModelTuple = Tools.OpenModelTupleFromXml(openModelTupleXml);
+							openModelTuple = Tools.OpenModelContainerFromXml(openModelTupleXml);
 
 							Add("GetAllConnectionData succeeded");
 							SetDetailInformation(openModelTupleXml);
