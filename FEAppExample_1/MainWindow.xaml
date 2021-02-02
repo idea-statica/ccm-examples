@@ -29,8 +29,8 @@
             <Button Command="{Binding LoadCmd}" Margin="5,0">_Load model</Button>
             <Button Command="{Binding LoadCmd}" CommandParameter="FEA_Model_Examples\default_project.xml" Margin="5,0">Default</Button>
             <CheckBox Margin="5,3" IsChecked="{Binding IsCAD}">Is CAD</CheckBox>
-            <Button Command="{Binding GetConnectionModelCmd}" Margin="5,0">GetConnectionModel</Button>
-            <Button Command="{Binding GetAllConnectionDataCmd}" Margin="5,0">GetAllConnectionData</Button>
+            <Button Command="{Binding GetConnectionModelCmd}" Margin="5,0" ToolTip="Get connection model for active connection. (chosen in CCM)">GetConnectionModel</Button>
+            <Button Command="{Binding GetAllConnectionDataCmd}" Margin="5,0" ToolTip="Get structural data and corresponding results of FE analysis (the instance of IdeaRS.OpenModel.OpenModelContainer)">GetAllConnectionData</Button>
             <Button Command="{Binding GetCssInProjectCmd}" Margin="5,0">CSS in project</Button>
             <Button Command="{Binding GetCssInMprlCmd}" Margin="5,0">CSS in MPRL</Button>
             <Button Command="{Binding GetMatInProjectCmd}" Margin="5,0">Materials in project</Button>
