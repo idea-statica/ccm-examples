@@ -1,4 +1,6 @@
-## ccm-examples
+## Version 21 was moved to the new repository [ideastatica-public](https://github.com/idea-statica/ideastatica-public)
+
+## ccm-examples for version 20.1 and older
 Examples of using - Idea StatiCa Code Check Manager API
 
  ### Example [FEAppExample_1](https://github.com/idea-statica/ccm-examples/tree/master/FEAppExample_1)
